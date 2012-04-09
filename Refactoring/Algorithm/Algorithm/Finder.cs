@@ -11,49 +11,50 @@ namespace Algorithm
             _p = p;
         }
 
-        public F Find(FT ft)
+        public Pair Find(FindType findType)
         {
-            var tr = new List<F>();
+            var tr = new List<Pair>();
 
             for(var i = 0; i < _p.Count - 1; i++)
             {
                 for(var j = i + 1; j < _p.Count; j++)
                 {
-                    var r = new F();
+                    var r = new Pair();
                     if(_p[i].BirthDate < _p[j].BirthDate)
                     {
-                        r.P1 = _p[i];
-                        r.P2 = _p[j];
+                        r.Person1 = _p[i];
+                        r.Person2 = _p[j];
                     }
                     else
                     {
-                        r.P1 = _p[j];
-                        r.P2 = _p[i];
+                        r.Person1 = _p[j];
+                        r.Person2 = _p[i];
                     }
-                    r.D = r.P2.BirthDate - r.P1.BirthDate;
+                    r.AgeDifference = r.Person2.BirthDate - r.Person1.BirthDate;
                     tr.Add(r);
                 }
             }
 
             if(tr.Count < 1)
             {
-                return new F();
+                return new Pair();
             }
 
-            F answer = tr[0];
+            var answer = tr[0];
+
             foreach(var result in tr)
             {
-                switch(ft)
+                switch(findType)
                 {
-                    case FT.One:
-                        if(result.D < answer.D)
+                    case FindType.Closest:
+                        if(result.AgeDifference < answer.AgeDifference)
                         {
                             answer = result;
                         }
                         break;
 
-                    case FT.Two:
-                        if(result.D > answer.D)
+                    case FindType.Furthest:
+                        if(result.AgeDifference > answer.AgeDifference)
                         {
                             answer = result;
                         }
