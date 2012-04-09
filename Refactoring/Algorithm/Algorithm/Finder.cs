@@ -1,68 +1,40 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Algorithm
 {
-    public class Finder
-    {
-        private readonly List<Thing> _p;
+	public class Finder
+	{
+		private readonly List<Person> _person;
 
-        public Finder(List<Thing> p)
-        {
-            _p = p;
-        }
+		public Finder(List<Person> person)
+		{
+			_person = person;
+		}
 
-        public Pair Find(FindType findType)
-        {
-            var tr = new List<Pair>();
+		public Pair FindClosest()
+		{
+			return Find(pairs => pairs.OrderBy(p => p.AgeDifference).FirstOrDefault());
+		}
 
-            for(var i = 0; i < _p.Count - 1; i++)
-            {
-                for(var j = i + 1; j < _p.Count; j++)
-                {
-                    var r = new Pair();
-                    if(_p[i].BirthDate < _p[j].BirthDate)
-                    {
-                        r.Person1 = _p[i];
-                        r.Person2 = _p[j];
-                    }
-                    else
-                    {
-                        r.Person1 = _p[j];
-                        r.Person2 = _p[i];
-                    }
-                    r.AgeDifference = r.Person2.BirthDate - r.Person1.BirthDate;
-                    tr.Add(r);
-                }
-            }
+		public Pair FindFurthest()
+		{
+			return Find(pairs => pairs.OrderByDescending(p => p.AgeDifference).FirstOrDefault());
+		}
 
-            if(tr.Count < 1)
-            {
-                return new Pair();
-            }
+		public Pair Find(Func<IEnumerable<Pair>, Pair> pairSelectionLambda)
+		{
+			var availableDistinctPairs = GetDistinctPairs();
 
-            var answer = tr[0];
+			return pairSelectionLambda(availableDistinctPairs) ?? new Pair();
+		}
 
-            foreach(var result in tr)
-            {
-                switch(findType)
-                {
-                    case FindType.Closest:
-                        if(result.AgeDifference < answer.AgeDifference)
-                        {
-                            answer = result;
-                        }
-                        break;
-
-                    case FindType.Furthest:
-                        if(result.AgeDifference > answer.AgeDifference)
-                        {
-                            answer = result;
-                        }
-                        break;
-                }
-            }
-
-            return answer;
-        }
-    }
+		private IEnumerable<Pair> GetDistinctPairs()
+		{
+			for (var i = 0; i < _person.Count - 1; i++)
+				for (var j = i + 1; j < _person.Count; j++)
+					yield return new Pair(_person[i], _person[j]);
+		}
+	}
 }

@@ -42,8 +42,7 @@
   <ItemGroup>
     <Compile Include="Finder.cs" />
     <Compile Include="Pair.cs" />
-    <Compile Include="FindType.cs" />
-    <Compile Include="Thing.cs" />
+    <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
